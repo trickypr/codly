@@ -1141,7 +1141,20 @@
         if collection != none {
           collection.push(child)
         } else if collection == none and (i >= hl.start or i + len >= hl.start) and (i < hl.end) {
-          collection = (child, )
+          let child-text = child.child.text
+
+          // Special case handling for strings that start with a space. These are likely unstyled
+          if child-text.starts-with(" ") {
+            let trimmed = child-text.trim(at: start)
+            let trim-size = child-text.len() - trimmed.len()
+
+            for _ in range(0, trim-size) {
+              children.push(" ")
+            }
+            collection = ([#child.child.text.trim()], )
+          } else {
+            collection = (child, )
+          }
         } else {
           children.push(child)
         }
